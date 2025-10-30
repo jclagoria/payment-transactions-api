@@ -1,0 +1,11 @@
+services:
+
+  numerator-api:
+    image: node:20-alpine
+    command: sh -c "yarn install && node api.js"
+    stop_grace_period: 1s
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./numerator-api:/app
