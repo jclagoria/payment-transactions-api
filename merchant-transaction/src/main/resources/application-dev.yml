@@ -1,0 +1,46 @@
+spring:
+  r2dbc:
+    url: ${DATABASE_URL_POSTGRES_DEV}
+    username: ${XATA_USERNAME}
+    password: ${XATA_API_KEY}
+    pool:
+      initial-size: 5
+      max-size: 10
+      max-idle-time: 30m
+      validation-query: SELECT 1
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      continue-on-error: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
+      timeout: 2000ms
+      ssl:
+        enabled: true
+
+numerator:
+  api:
+    base-url: ${NUMERATOR_API_URL:http://localhost:3000}
+    retry:
+      max-attempts: 5
+      backoff-delay: 100
+
+logging:
+  level:
+    root: INFO
+    com.merchant.transaction: DEBUG
+    io.r2dbc.postgresql.QUERY: DEBUG
+    io.r2dbc.postgresql.PARAM: DEBUG
+    org.springframework.r2dbc: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+  file:
+    name: logs/merchant-transaction-dev.log
+    max-size: 10MB
+    max-history: 7

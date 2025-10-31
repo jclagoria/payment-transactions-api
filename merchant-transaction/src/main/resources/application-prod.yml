@@ -1,0 +1,74 @@
+spring:
+  r2dbc:
+    url: ${DATABASE_URL_POSTGRES_PROD}
+    username: ${XATA_USERNAME}
+    password: ${XATA_API_KEY}
+    pool:
+      initial-size: 20
+      max-size: 50
+      max-idle-time: 10m
+      validation-query: SELECT 1
+      max-acquire-time: 5000ms
+      max-create-connection-time: 5000ms
+
+  sql:
+    init:
+      mode: never
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      username: ${REDIS_USERNAME}
+      password: ${REDIS_PASSWORD}
+      timeout: 3000ms
+      ssl:
+        enabled: true
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 20
+          min-idle: 5
+          max-wait: 2000ms
+
+numerator:
+  api:
+    base-url: ${NUMERATOR_API_URL}
+    retry:
+      max-attempts: 5
+      backoff-delay: 200
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      numeratorApi:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 100
+        slow-call-duration-threshold: 2s
+
+  retry:
+    instances:
+      numeratorApi:
+        max-attempts: 5
+        wait-duration: 200ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+
+logging:
+  level:
+    root: INFO
+    com.merchant.transaction: INFO
+    io.r2dbc.postgresql: WARN
+    org.springframework.r2dbc: WARN
+    org.springframework.data.r2dbc: WARN
+  file:
+    name: /var/log/merchant-transaction/application.log
+    max-size: 50MB
+    max-history: 30
+    total-size-cap: 1GB
