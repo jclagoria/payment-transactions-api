@@ -23,11 +23,14 @@ spring:
       password: ${REDIS_PASSWORD}
       timeout: 2000ms
       ssl:
-        enabled: true
+        enabled: false
 
 numerator:
   api:
-    base-url: ${NUMERATOR_API_URL:http://localhost:3000}
+    base-url: ${NUMERATOR_API_URL}
+    endpoints:
+      get-current: /numerator
+      test-and-set: /numerator/test-and-set
     retry:
       max-attempts: 5
       backoff-delay: 100
@@ -36,11 +39,24 @@ logging:
   level:
     root: INFO
     com.merchant.transaction: DEBUG
+    io.lettuce.core: DEBUG
+    io.netty: WARN
+    reactor.netty: WARN
+    org.springframework.data.redis: DEBUG
     io.r2dbc.postgresql.QUERY: DEBUG
     io.r2dbc.postgresql.PARAM: DEBUG
     org.springframework.r2dbc: DEBUG
     org.springframework.data.r2dbc: DEBUG
+    org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
+    org.springframework.web.reactive.function.client.ExchangeFilterFunction: DEBUG
+    org.springframework.web.reactive.function.client.ExchangeFilterFunctions: DEBUG
+    org.springframework.web.reactive.function.client.ExchangeFilterFunctions$DefaultExchangeFilterFunction: DEBUG
+    org.springframework.web.reactive.function.client.ExchangeFilterFunctions$DefaultExchangeFilterFunction$DefaultClientRequest: DEBUG
+    org.springframework.web.reactive.function.client.ExchangeFilterFunctions$DefaultExchangeFilterFunction$DefaultClientResponse: DEBUG
+    reactor.netty.http.client.HttpClient: DEBUG
+    reactor.netty.http.client.HttpClientConnect: DEBUG
+
   file:
     name: logs/merchant-transaction-dev.log
-    max-size: 10MB
+    max-size: 100MB
     max-history: 7

@@ -1,8 +1,7 @@
 .idea
-node_modules
+node_modules/
 
 docs/
 .mvn/
-merchant-transaction/
 merchant-transaction/mvnw
 merchant-transaction/mvnw.cmd

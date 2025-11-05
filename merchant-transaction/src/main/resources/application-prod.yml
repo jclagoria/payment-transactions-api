@@ -34,6 +34,9 @@ spring:
 numerator:
   api:
     base-url: ${NUMERATOR_API_URL}
+    endpoints:
+      get-current: /numerator
+      test-and-set: /numerator/test-and-set
     retry:
       max-attempts: 5
       backoff-delay: 200
