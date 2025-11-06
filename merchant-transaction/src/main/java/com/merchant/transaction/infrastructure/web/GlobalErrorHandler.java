@@ -1,5 +1,6 @@
 package com.merchant.transaction.infrastructure.web;
 
+import com.merchant.transaction.application.dto.ErrorResponse;
 import com.merchant.transaction.domain.exception.IdGenerationException;
 import com.merchant.transaction.domain.exception.InvalidTransactionException;
 import com.merchant.transaction.domain.exception.TransactionCreationException;
@@ -64,6 +65,23 @@ public class GlobalErrorHandler {
         return Mono.just(ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response));
+    }
+
+    /**
+     * Handles IllegalArgumentException from query validation.
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Validation error: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Validation Error")
+                .message(ex.getMessage())
+                .build();
+
+        return Mono.just(ResponseEntity.badRequest().body(errorResponse));
     }
 
     @ExceptionHandler(Exception.class)
